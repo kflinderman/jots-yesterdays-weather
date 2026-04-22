@@ -148,6 +148,18 @@ export class YesterdaysWeatherSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
+                .setName('Override Existing Data')
+                .setDesc(`Override weather data if it already exists`)
+                .addToggle((toggle) =>
+                    toggle
+                        .setValue(this.plugin.settings.override)
+                        .onChange(async (value) => {
+                            this.plugin.settings.override = value;
+                            await this.plugin.saveSettings();
+                        })
+                );
+
+        new Setting(containerEl)
             .setName('Fetch weather for specific date')
             .setDesc('Click the button to fetch weather for the specified date.')
             .addButton((button: ButtonComponent) => {
