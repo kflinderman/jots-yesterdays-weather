@@ -130,6 +130,17 @@ export class YesterdaysWeatherSettingTab extends PluginSettingTab {
                     this.plugin.scheduleDailyRun(); // Reschedule the daily run
                 }, 1000)));
 
+        // Overwrite Existing Data Setting
+        new Setting(containerEl)
+            .setName('Overwrite existing weather data')
+            .setDesc('When enabled, manually fetching weather will overwrite existing data. Automatic daily runs will never overwrite.')
+            .addToggle((toggle: ToggleComponent) => toggle
+                .setValue(this.plugin.settings.overwriteExisting)
+                .onChange(async (value: boolean) => {
+                    this.plugin.settings.overwriteExisting = value;
+                    await this.plugin.saveSettings();
+                }));
+
         // Specific Date Section
         new Setting(containerEl)
             .setName('Manually add for date')
@@ -146,18 +157,6 @@ export class YesterdaysWeatherSettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     });
             });
-
-        new Setting(containerEl)
-                .setName('Override Existing Data')
-                .setDesc(`Override weather data if it already exists`)
-                .addToggle((toggle) =>
-                    toggle
-                        .setValue(this.plugin.settings.override)
-                        .onChange(async (value) => {
-                            this.plugin.settings.override = value;
-                            await this.plugin.saveSettings();
-                        })
-                );
 
         new Setting(containerEl)
             .setName('Fetch weather for specific date')
@@ -201,7 +200,7 @@ export class YesterdaysWeatherSettingTab extends PluginSettingTab {
                                 throw new Error("Weather data is only available for the past year");
                             }
 
-                            await fetchWeatherForDate(this.plugin, date);
+                            await fetchWeatherForDate(this.plugin, date, this.plugin.settings.overwriteExisting);
                         } catch (error) {
                             console.error("Error fetching weather for specific date:", error);
                             new Notice(`${error.message || 'Failed to fetch weather. Please enter a valid date in YYYY-MM-DD format.'}`);

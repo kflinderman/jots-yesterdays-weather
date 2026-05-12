@@ -10,14 +10,16 @@ export default class YesterdaysWeatherPlugin extends Plugin {
     private lastYesterdayDate?: Date;
     private lastRun?: Date;
 
-    async YesterdaysWeather() {
+    async YesterdaysWeather(manualTrigger: boolean = false) {
         const now = new Date();
         // Only create new Date object if not same day
         if (!this.lastRun || this.lastRun.getDate() !== now.getDate()) {
             this.lastYesterdayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 12, 0, 0, 0);
             this.lastRun = now;
         }
-        await fetchWeatherForDate(this, this.lastYesterdayDate!);
+        // Use overwriteExisting setting when manually triggered, never overwrite on automatic runs
+        const force = manualTrigger && this.settings.overwriteExisting;
+        await fetchWeatherForDate(this, this.lastYesterdayDate!, force);
     }
 
     scheduleDailyRun() {
@@ -32,7 +34,7 @@ export default class YesterdaysWeatherPlugin extends Plugin {
             this.addCommand({
                 id: 'yesterdays-weather',
                 name: 'Fetch Yesterday\'s Weather',
-                callback: () => this.YesterdaysWeather()
+                callback: () => this.YesterdaysWeather(true)
             });
 
             // Add settings tab

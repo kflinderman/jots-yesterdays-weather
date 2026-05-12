@@ -91,8 +91,9 @@ function hasWeatherData(plugin: YesterdaysWeatherPlugin, file: TFile): boolean {
  * Fetch weather data for a specific date.
  * @param {YesterdaysWeatherPlugin} plugin - The plugin instance.
  * @param {Date} date - The date for which to fetch weather data.
+ * @param {boolean} force - Whether to overwrite existing weather data.
  */
-export async function fetchWeatherForDate(plugin: YesterdaysWeatherPlugin, date: Date) {
+export async function fetchWeatherForDate(plugin: YesterdaysWeatherPlugin, date: Date, force: boolean = false) {
     if (!plugin.settings || !plugin.settings.apiKey || !plugin.settings.location) {
         new Notice('Please configure your API key and location in the settings.');
         return;
@@ -103,14 +104,14 @@ export async function fetchWeatherForDate(plugin: YesterdaysWeatherPlugin, date:
         new Notice('Creating or getting note...');
         const file = await getOrCreateNote(plugin, date);
 
-        // Check if weather data already exists
-        if (await hasWeatherData(plugin, file)) {
+        // Check if weather data already exists (skip check if force is true)
+        if (!force && await hasWeatherData(plugin, file)) {
             new Notice('Weather data already exists for this date');
             return;
         }
 
         // Then fetch and add weather data separately
-        new Notice('Fetching weather data...');
+        new Notice(force ? 'Fetching and overwriting weather data...' : 'Fetching weather data...');
         const apiUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${plugin.settings.location}/${dateString}/${dateString}?unitGroup=us&include=days&key=${plugin.settings.apiKey}&contentType=json`;
 
         try {

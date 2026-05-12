@@ -14,6 +14,7 @@ export interface YesterdaysWeatherSettings {
     runTime: string;
     specificDate: string;
     templatePath: string;
+    overwriteExisting: boolean;
     properties: {
         [key: string]: PropertySettings;
     };
@@ -40,6 +41,7 @@ export const DEFAULT_SETTINGS: YesterdaysWeatherSettings = {
     runTime: '',
     specificDate: '',
     templatePath: '',
+    overwriteExisting: false,
     properties: {
         wtrtempmax: { enabled: true, name: 'wtrtempmax' },
         wtrtempmin: { enabled: true, name: 'wtrtempmin' },
