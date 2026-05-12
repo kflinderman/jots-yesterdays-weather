@@ -9,7 +9,7 @@ export default defineConfig({
       fileName: () => 'main.js',
     },
     rollupOptions: {
-      external: ['obsidian'],
+      external: ['obsidian', 'moment'],
       output: {
         format: 'cjs',
         exports: 'default',
