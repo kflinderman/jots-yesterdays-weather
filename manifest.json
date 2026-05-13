@@ -1,10 +1,10 @@
 {
     "id": "jots-yesterdays-weather",
     "name": "Yesterday's Weather",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "minAppVersion": "1.0.0",
     "description": "Capture yesterday's weather to yesterday's daily note.",
-    "author": "Joseph Fieber",
+    "author": "Joseph Fieber/Kenny Linderman",
     "authorUrl": "https://jots.life",
     "fundingUrl": {
         "Buy Me a Coffee": "https://www.buymeacoffee.com/jpfieber",
